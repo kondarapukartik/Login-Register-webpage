@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration form</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="Form-box">
+        <form class="Login-form" action="/login" method="POST" >
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="email" required class="login__input" name="username" placeholder=" ">
+                <label class="login__label">Email</label>
+                <ion-icon name="mail-outline"></ion-icon>
+            </div>
+            <div class="input-box">
+                <input type="password" required class="login__input" id="login-pass" name="password" placeholder=" ">
+                <label class="login__label">Password</label>
+                <i class="ri-eye-off-line" id="login-eye"></i>
+            </div>
+            <div class="checkbox">
+                <span>
+                    <input type="checkbox" id="login-checkbox">
+                    <label for="login-checkbox">Remember Me</label>
+                </span>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+            <p class="Register-btn">
+               Dont have an account ? <a href="#">Register</a>
+            </p>
+        </form>
+        <form class="Register-form" action="/register" method="POST" onsubmit="return validatePassword()">
+            <h1>Register</h1>
+            <div class="input-box">
+                <input type="email" required class="login__input" name="username" placeholder=" ">
+                <label class="login__label">Email</label>
+                <ion-icon name="mail-outline"></ion-icon>
+            </div>
+            <div class="input-box">
+               <input type="password" required class="login__input" id="password" name="password" placeholder=" ">
+               <label class="login__label">Password</label>
+               <i class="ri-eye-off-line" id="login-eye"></i>
+           </div>
+           <div class="input-box">
+            <input type="password" required class="login__input " id="cnfrm-password" placeholder=" ">
+            <label class="login__label">Confirm Password</label>
+            <i class="ri-eye-off-line" id="login-eye"></i>
+        </div>
+            <div class="checkbox">
+                <input type="checkbox" id="register-checkbox" required>
+                <label for="register-checkbox">I agree to the terms & conditions</label>
+            </div>
+            <div id="message"></div>
+            <button type="submit" class="submit-btn">Register</button>
+            <p class="Login-btn">
+               Register before ?<a href="#">Login</a>
+            </p>
+        </form>
+    </div>
+    <script>
+    let register_btn = document.querySelector(".Register-btn");
+    let login_btn = document.querySelector(".Login-btn");
+    let form = document.querySelector(".Form-box");
+    register_btn.addEventListener("click", () => {
+      form.classList.add("change-form");
+    });
+    login_btn.addEventListener("click", () => {
+      form.classList.remove("change-form");
+    });
+      const showHiddenPass = (loginPass, loginEye) =>{
+   const input = document.getElementById(loginPass),
+         iconEye = document.getElementById(loginEye)
+
+   iconEye.addEventListener('click', () =>{
+      // Change password to text
+      if(input.type === 'password'){
+         // Switch to text
+         input.type = 'text'
+
+         // Icon change
+         iconEye.classList.add('ri-eye-line')
+         iconEye.classList.remove('ri-eye-off-line')
+      } else{
+         // Change to password
+         input.type = 'password'
+
+         // Icon change
+         iconEye.classList.remove('ri-eye-line')
+         iconEye.classList.add('ri-eye-off-line')
+      }
+   })
+}
+showHiddenPass('login-pass','login-eye');
+
+function validatePassword() {
+            let password = document.getElementById("password").value;
+            let cnfrmPassword = document.getElementById("cnfrm-password").value;
+            console.log(" Password:", password, '\n', "Confirm Password:", cnfrmPassword);
+            let message = document.getElementById("message");
+
+            if (password.length !== 0) {
+                if (password === cnfrmPassword) {
+                    message.textContent = "Passwords match";
+                    message.style.backdropFilter = "blur(10px)";   
+                    return true;
+                } else {
+                    message.textContent = "Passwords not matched ";
+                    message.style.backdropFilter = "blur(10px)";
+
+                    return false;
+                }
+            } else {
+                alert("Password can't be empty!");
+                message.textContent = "";
+                return false;
+            }
+        }
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
