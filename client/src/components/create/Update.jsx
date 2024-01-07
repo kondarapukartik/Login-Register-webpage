@@ -61,7 +61,7 @@ const Update = () => {
 
     const { id } = useParams();
 
-    const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
+    const url = 'https://visme.co/blog/wp-content/uploads/2020/10/Header.png';
     
     useEffect(() => {
         const fetchData = async () => {
@@ -98,7 +98,10 @@ const Update = () => {
     const handleChange = (e) => {
         setPost({ ...post, [e.target.name]: e.target.value });
     }
-
+    const handleError = (error) => {
+        console.error('Error:', error);
+    };
+    
     return (
         <Container>
             <Image src={post.picture || url} alt="post" />
@@ -127,5 +130,6 @@ const Update = () => {
         </Container>
     )
 }
+
 
 export default Update;

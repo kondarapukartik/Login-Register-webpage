@@ -8,28 +8,46 @@ import { API } from '../../../service/api';
 //components
 import Comment from './Comment';
 
-const Container = styled(Box)`
-    margin-top: 100px;
-    display: flex;
-`;
+const Container = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(4),
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    paddingBottom: theme.spacing(2),
+}));
 
 const Image = styled('img')({
     width: 50,
     height: 50,
-    borderRadius: '50%'
+    borderRadius: '50%',
+    marginRight: 16,
 });
 
-const StyledTextArea = styled(TextareaAutosize)`
-    height: 100px !important;
-    width: 100%; 
-    margin: 0 20px;
-`;
+const StyledTextArea = styled(TextareaAutosize)(({ theme }) => ({
+    height: 100,
+    width: '100%', 
+    margin: 0,
+    padding: theme.spacing(1),
+    fontSize: theme.typography.body1.fontSize,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    resize: 'vertical',
+}));
+
+const PostButton = styled(Button)(({ theme }) => ({
+    height: 40,
+    marginLeft: theme.spacing(2),
+}));
+
+const CommentsContainer = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
 
 const initialValue = {
     name: '',
     postId: '',
     date: new Date(),
-    comments: ''
+    comments: '',
 }
 
 const Comments = ({ post }) => {
@@ -60,7 +78,7 @@ const Comments = ({ post }) => {
         });
     }
 
-    const addComment = async() => {
+    const addComment = async () => {
         await API.newComment(comment);
         setComment(initialValue)
         setToggle(prev => !prev);
@@ -72,25 +90,26 @@ const Comments = ({ post }) => {
                 <Image src={url} alt="dp" />   
                 <StyledTextArea 
                     rowsMin={5} 
-                    placeholder="what's on your mind?"
+                    placeholder="What's on your mind?"
                     onChange={(e) => handleChange(e)} 
                     value={comment.comments}
                 />
-                <Button 
+                <PostButton 
                     variant="contained" 
                     color="primary" 
                     size="medium" 
-                    style={{ height: 40 }}
                     onClick={(e) => addComment(e)}
-                >Post</Button>             
+                >
+                    Post
+                </PostButton>             
             </Container>
-            <Box>
+            <CommentsContainer>
                 {
-                    comments && comments.length > 0 && comments.map(comment => (
-                        <Comment comment={comment} setToggle={setToggle} />
+                    comments && comments.length > 0 && comments.map((comment, index) => (
+                        <Comment key={index} comment={comment} setToggle={setToggle} />
                     ))
                 }
-            </Box>
+            </CommentsContainer>
         </Box>
     )
 }

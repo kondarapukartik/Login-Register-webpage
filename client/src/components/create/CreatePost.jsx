@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from 'react';
 
-import { styled, Box, TextareaAutosize, Button, InputBase, FormControl  } from '@mui/material';
+import { styled, Box, TextareaAutosize, Button, InputBase, FormControl } from '@mui/material';
 import { AddCircle as Add } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -8,39 +9,62 @@ import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
 const Container = styled(Box)(({ theme }) => ({
-    margin: '50px 100px',
-    [theme.breakpoints.down('md')]: {
-        margin: 0
-    }
+    margin: '50px auto', // Center the component horizontally
+    maxWidth: '800px', // Set a max width for better readability
+    padding: '20px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    backgroundColor: 'white',
 }));
 
 const Image = styled('img')({
     width: '100%',
     height: '50vh',
-    objectFit: 'cover'
+    objectFit: 'cover',
+    borderRadius: '8px 8px 0 0', // Rounded corners only at the top
 });
 
-const StyledFormControl = styled(FormControl)`
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-`;
+const StyledFormControl = styled(FormControl)({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '20px',
+});
 
-const InputTextField = styled(InputBase)`
-    flex: 1;
-    margin: 0 30px;
-    font-size: 25px;
-`;
+const InputTextField = styled(InputBase)(({ theme }) => ({
+    flex: 1,
+    margin: '20px 0',
+    padding: '10px',
+    fontSize: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    '&:focus-within': {
+        borderColor: theme.palette.primary.main,
+    },
+}));
 
-const Textarea = styled(TextareaAutosize)`
-    width: 100%;
-    border: none;
-    margin-top: 50px;
-    font-size: 18px;
-    &:focus-visible {
-        outline: none;
-    }
-`;
+const PublishButton = styled(Button)(({ theme }) => ({
+    marginTop: '20px',
+    padding: '15px',
+    fontSize: '18px',
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    '&:hover': {
+        backgroundColor: theme.palette.primary.dark,
+    },
+}));
+
+const Textarea = styled(TextareaAutosize)({
+    width: '100%',
+    border: '1px solid #ccc',
+    padding: '10px',
+    marginTop: '20px',
+    borderRadius: '4px',
+    fontSize: '16px',
+    '&:focus-visible': {
+        outline: 'none',
+    },
+});
 
 const initialPost = {
     title: '',
@@ -48,8 +72,8 @@ const initialPost = {
     picture: '',
     username: '',
     categories: '',
-    createdDate: new Date()
-}
+    createdDate: new Date(),
+};
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -59,32 +83,32 @@ const CreatePost = () => {
     const [file, setFile] = useState('');
     const { account } = useContext(DataContext);
 
-    const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
-    
+    const url = post.picture ? post.picture : 'https://visme.co/blog/wp-content/uploads/2020/10/Header.png';
+
     useEffect(() => {
-        const getImage = async () => { 
-            if(file) {
+        const getImage = async () => {
+            if (file) {
                 const data = new FormData();
-                data.append("name", file.name);
-                data.append("file", file);
-                
+                data.append('name', file.name);
+                data.append('file', file);
+
                 const response = await API.uploadFile(data);
                 post.picture = response.data;
             }
-        }
+        };
         getImage();
         post.categories = location.search?.split('=')[1] || 'All';
         post.username = account.username;
-    }, [file])
+    }, [file]);
 
     const savePost = async () => {
         await API.createPost(post);
         navigate('/');
-    }
+    };
 
     const handleChange = (e) => {
         setPost({ ...post, [e.target.name]: e.target.value });
-    }
+    };
 
     return (
         <Container>
@@ -97,21 +121,18 @@ const CreatePost = () => {
                 <input
                     type="file"
                     id="fileInput"
-                    style={{ display: "none" }}
+                    style={{ display: 'none' }}
                     onChange={(e) => setFile(e.target.files[0])}
                 />
-                <InputTextField onChange={(e) => handleChange(e)} name='title' placeholder="Title" />
-                <Button onClick={() => savePost()} variant="contained" color="primary">Publish</Button>
+                <InputTextField onChange={(e) => handleChange(e)} name="title" placeholder="Title" />
+                <PublishButton onClick={() => savePost()} variant="contained">
+                    Publish
+                </PublishButton>
             </StyledFormControl>
 
-            <Textarea
-                rowsMin={5}
-                placeholder="Tell your story..."
-                name='description'
-                onChange={(e) => handleChange(e)} 
-            />
+            <Textarea rowsMin={5} placeholder="Tell your story..." name="description" onChange={(e) => handleChange(e)} />
         </Container>
-    )
-}
+    );
+};
 
 export default CreatePost;
