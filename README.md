@@ -1,4 +1,4 @@
-# BharatIntern
+#Login & Register Webpage
 This is a website based on the Registration forms
 To start this website on your web browser follow the steps:
 Open the terminal in your vs code.
